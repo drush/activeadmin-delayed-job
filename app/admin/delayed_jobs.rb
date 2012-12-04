@@ -31,8 +31,8 @@ class Delayed::Job
   end
 end
 
-ActiveAdmin.register Delayed::Job do
-  menu :label => "Background Jobs", :parent => "Dashboard"
+ActiveAdmin.register Delayed::Job, :as => "Background Job" do
+  menu :label => "Background Jobs", :parent => "Dashboard", :title => 'Background Jobs'
 
   filter :queue
 
