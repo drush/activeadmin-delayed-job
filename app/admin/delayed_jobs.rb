@@ -1,7 +1,7 @@
 class Delayed::Job 
   class << self
     def running
-      where('locked_at is not null and failed_at is null')
+      where('failed_at is null and locked_at is not null')
     end
 
     def failed
@@ -45,7 +45,7 @@ ActiveAdmin.register Delayed::Job, :as => "Background Job" do
     Delayed::Job.find(selection).each do |job|
       job.retry!
     end
-    redirect_to admin_delayed_backend_active_record_jobs_path, :notice => "Retrying jobs"
+    redirect_to admin_background_jobs_path, :notice => "Retrying jobs"
   end
 
 

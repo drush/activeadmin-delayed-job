@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "A plug-and-play controller that lets you monitor and retry jobs easily."
   s.description = "View all, running, failed, and queued jobs.  Retry failed jobs."
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.haml"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails"
