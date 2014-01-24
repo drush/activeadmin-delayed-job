@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 
 # Declare your gem's dependencies in active_admin_delayed_job.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
@@ -6,7 +6,11 @@ source "http://rubygems.org"
 gemspec
 
 # jquery-rails is used by the dummy application
-gem "jquery-rails"
+group :development, :test do
+  gem 'jquery-rails'
+  gem 'sqlite3'
+  gem 'sass-rails'
+end
 
 # Declare any dependencies that are still in development here instead of in
 # your gemspec. These might include edge Rails or gems from your path or

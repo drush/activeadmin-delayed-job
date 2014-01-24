@@ -33,7 +33,7 @@ if defined?(ActiveAdmin)
   end
 
   ActiveAdmin.register Delayed::Job, :as => "Background Job" do
-    menu :label => "Background Jobs", :parent => "Dashboard", :title => 'Background Jobs'
+    menu label: "Background Jobs",  title: 'Background Jobs' #:parent => "Dashboard",
 
     filter :queue
 
