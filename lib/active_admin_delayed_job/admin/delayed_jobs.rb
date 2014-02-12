@@ -1,6 +1,10 @@
 if defined?(ActiveAdmin)
-  class Delayed::Job 
+  class Delayed::Job
     class << self
+      def all
+        scoped
+      end
+
       def running
         where('failed_at is null and locked_at is not null')
       end
