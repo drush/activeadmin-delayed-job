@@ -43,10 +43,10 @@ if defined?(ActiveAdmin)
 
     filter :queue
 
-    scope :all
-    scope :running
-    scope :failed
-    scope :waiting
+    # scope :all
+    # scope :running
+    # scope :failed
+    # scope :waiting
 
     batch_action 'Retry' do |selection|
       Delayed::Job.find(selection).each do |job|
