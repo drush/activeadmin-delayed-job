@@ -90,7 +90,7 @@ if defined?(ActiveAdmin)
       #column :last_error
       #column :created_at
 
-      default_actions                   
+      actions                   
     end 
 
   end
