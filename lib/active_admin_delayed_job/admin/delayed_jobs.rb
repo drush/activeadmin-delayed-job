@@ -10,7 +10,18 @@ ActiveAdmin.register Delayed::Job, :as => "Background Job" do
       job.retry!
     end
 
-    redirect_to admin_background_jobs_path, :notice => "Retrying jobs"
+    redirect_to self.send("#{ActiveAdmin.application.default_namespace}_background_jobs_path"), notice: "Retrying Jobs"
+  end
+
+  member_action :retry, method: :post do
+    job = Delayed::Job.find(params[:id])
+    job.retry!
+
+    redirect_to self.send("#{ActiveAdmin.application.default_namespace}_background_jobs_path"), notice: "Retrying Job"
+  end
+
+  action_item only: :show do
+    link_to("Retry Job", self.send("retry_#{ActiveAdmin.application.default_namespace}_background_job_path", resource), method: :post)
   end
 
   index do     
@@ -38,7 +49,9 @@ ActiveAdmin.register Delayed::Job, :as => "Background Job" do
       
     end
 
-    actions                   
-  end 
+    actions defaults: true do |job|
+      link_to("Retry Job", self.send("retry_#{ActiveAdmin.application.default_namespace}_background_job_path", job), method: :post)
+    end              
+  end
 
 end
