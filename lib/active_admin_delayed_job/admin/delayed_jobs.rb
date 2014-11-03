@@ -1,97 +1,64 @@
-if defined?(ActiveAdmin)
-  class Delayed::Job
-    class << self
-      def all
-        scoped
-      end
+ActiveAdmin.register Delayed::Job, :as => "Background Job" do
+  menu label: "Background Jobs",  title: 'Background Jobs', parent: "Dashboard"
 
-      def running
-        where('failed_at is null and locked_at is not null')
-      end
+  actions :index, :show, :update, :edit, :destroy
 
-      def failed
-        where('failed_at is not null')
-      end
+  filter :queue
 
-      def waiting
-        where('failed_at is null and locked_at is null')
-      end
-
+  batch_action 'Retry' do |selection|
+    Delayed::Job.find(selection).each do |job|
+      job.retry!
     end
 
-    def state
-      return 'failed' unless failed_at.blank?
-      return 'running' unless locked_at.nil?
-      return 'scheduled' if run_at > created_at
-      return 'queued'
-    end
-
-    def retry!
-      j = self
-      j.run_at = Time.now
-      j.last_error = nil
-      j.failed_at = nil
-      j.attempts = 0
-      j.save
-    end
+    redirect_to self.send("#{ActiveAdmin.application.default_namespace}_background_jobs_path"), notice: "Retrying Jobs"
   end
 
-  ActiveAdmin.register Delayed::Job, :as => "Background Job" do
-    menu label: "Background Jobs",  title: 'Background Jobs', parent: "Dashboard"
+  member_action :retry, method: :post do
+    job = Delayed::Job.find(params[:id])
+    job.retry!
 
-    actions :index, :show, :update, :edit, :destroy
+    redirect_to self.send("#{ActiveAdmin.application.default_namespace}_background_jobs_path"), notice: "Retrying Job"
+  end
 
-    filter :queue
+  action_item only: :show do
+    link_to("Retry Job", self.send("retry_#{ActiveAdmin.application.default_namespace}_background_job_path", resource), method: :post)
+  end
 
-    # scope :all
-    # scope :running
-    # scope :failed
-    # scope :waiting
-
-    batch_action 'Retry' do |selection|
-      Delayed::Job.find(selection).each do |job|
-        job.retry!
+  index do     
+    selectable_column                        
+    column :id 
+    column :queue
+    column :priority
+    column :attempts
+    
+    column :status do |job|
+      case job.state
+      when 'failed'
+        status_tag "Failed:", :error 
+        span "#{job.last_error[0..100]}" 
+      when 'running'
+        status_tag "Running", :warning
+        span "for #{time_ago_in_words(job.locked_at)} @ #{job.locked_by}"   
+      when 'scheduled'
+        status_tag "Scheduled", :ok
+        span "for #{time_ago_in_words(job.run_at)} from now" 
+      else
+        status_tag "Queued" 
+        span "for #{time_ago_in_words(job.created_at)}" 
       end
-      redirect_to admin_background_jobs_path, :notice => "Retrying jobs"
-    end
-
-
-    index do     
-      selectable_column                        
-      column :id 
-      column :queue
-      column :priority
       
-      column :status do |job|
-        case job.state
-        when 'failed'
-          status_tag "Failed:", :error 
-          span "#{job.last_error[0..100]}" 
-        when 'running'
-          status_tag "Running", :warning
-          span "for #{time_ago_in_words(job.locked_at)} @ #{job.locked_by}"   
-        when 'scheduled'
-          status_tag "Scheduled", :ok
-          span "for #{time_ago_in_words(job.run_at)} from now" 
-        else
-          status_tag "Queued" 
-          span "for #{time_ago_in_words(job.created_at)}" 
-        end
-        
-      end
+    end
 
-      #column :run_at
-
-      column :attempts
-
-      #column :locked_at
-      #column :locked_by
-      #column :failed_at
-      #column :last_error
-      #column :created_at
-
-      actions                   
-    end 
-
+    actions defaults: true do |job|
+      link_to("Retry Job", self.send("retry_#{ActiveAdmin.application.default_namespace}_background_job_path", job), method: :post)
+    end              
   end
+
+  show do |job|
+    attributes_table *(default_attribute_table_rows - [:handler, :last_error]) do
+      row(:handler) { simple_format(job.handler) rescue "" }
+      row(:last_error) { simple_format(job.last_error) rescue "" }
+    end
+  end
+
 end
