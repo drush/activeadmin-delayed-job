@@ -1,0 +1,68 @@
+AllCops:
+  # Exclude:
+  TargetRubyVersion: 2.3
+
+Layout/AccessModifierIndentation:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
+  Max: 100
+
+# Metrics/ClassLength:
+#   Enabled: false
+
+# Metrics/CyclomaticComplexity:
+#   Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
+# Metrics/MethodLength:
+#   Enabled: false
+
+# Metrics/ParameterLists:
+#   Enabled: false
+
+# Metrics/PerceivedComplexity:
+#   Enabled: false
+
+# Rails/HasAndBelongsToMany:
+#   Enabled: false
+
+# Rails/SkipsModelValidations:
+#   Exclude:
+#     - test/**/*
+#   Blacklist:
+#     # touch has been removed from the default list
+#     - decrement!
+#     - decrement_counter
+#     - increment!
+#     - increment_counter
+#     - toggle!
+#     - update_all
+#     - update_attribute
+#     - update_column
+#     - update_columns
+#     - update_counters
+
+# Style/ClassAndModuleChildren:
+#   Exclude:
+#     - test/test_helper.rb
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# Style/SymbolArray:
+#   Enabled: false
+
+# Style/TrailingCommaInArguments:
+#   Enabled: false
+
+# Naming/VariableNumber:
+#   EnforcedStyle: 'snake_case'

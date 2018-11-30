@@ -1,8 +1,8 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 gemspec
 
 group :development, :test do
   gem 'jquery-rails'
-  gem 'sqlite3'
   gem 'sass-rails'
+  gem 'sqlite3'
 end
