@@ -20,7 +20,7 @@ ActiveAdmin.register Delayed::Job, :as => "Background Job" do
     redirect_to self.send("#{ActiveAdmin.application.default_namespace}_background_jobs_path"), notice: "Retrying Job"
   end
 
-  action_item only: :show do
+  action_item :retry, only: :show do
     link_to("Retry Job", self.send("retry_#{ActiveAdmin.application.default_namespace}_background_job_path", resource), method: :post)
   end
 
